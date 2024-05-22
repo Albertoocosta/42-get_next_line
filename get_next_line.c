@@ -6,7 +6,7 @@
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:30:07 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/20 21:07:50 by cda-fons         ###   ########.fr       */
+/*   Updated: 2024/05/22 21:05:51 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,14 @@
 char	*get_next_line(int fd)
 {
 	static char	*cluster;
-	char		*reader;
-	int	i;
-	int	j;
+	int	reader;
 
-	i = 0;
-	j = 0;
 	cluster = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!cluster)
+		return (0);
 	reader = (read(fd, cluster, BUFFER_SIZE));
-	while (cluster[i] != '\n' && cluster[i])
-		i++;
-	if (cluster[i] == '\n')
-	{
-		while (j < i)
-			write(1, cluster[j], 1);
-	}
-	
+	if (reader <= 0)
+		free(cluster);
+		return (0);	
+	return (cluster);
 }
