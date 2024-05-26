@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_fts.c                                          :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:37:04 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/22 19:42:25 by cda-fons         ###   ########.fr       */
+/*   Updated: 2024/05/26 14:38:34 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,54 @@ char	*ftstrjoin(char const *s1, char const *s2)
 	}
 	cat[i] = '\0';
 	return (cat);
+}
+char	*newcluster(char *cluster)
+{
+	char	*word;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cluster[i] && cluster[i] != '\n')
+		i++;
+	if (!cluster[i])
+		return (free(cluster), NULL);
+	word = (char *)malloc(sizeof(char) * (ftstrlen(cluster) - i + 1));
+	if (!word)
+		return (NULL);
+	i++;
+	j = 0;
+	while (cluster[i])
+	{
+		word[j] = cluster[i];	
+		j++;
+		i++;
+	}
+	word[j] = '\0';
+	free(cluster);
+	return (word);
+}
+char	*get_line(char *cluster)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	while (cluster[i] && cluster[i] != '\n')
+		i++;
+	word = (char *)malloc(sizeof(char) * (i + 2));
+	if (!word)
+		return (NULL);
+	i = 0;
+	while (cluster[i] && cluster[i] != '\n')
+	{
+		word[i] = cluster[i];
+	}
+	if (cluster[i] == '\n')
+	{
+		word[i] = cluster[i];
+		i++;
+	}
+	word[i] = '\0';
+	return(word);
 }
