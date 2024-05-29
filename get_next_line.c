@@ -6,7 +6,7 @@
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:30:07 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/29 18:00:35 by cda-fons         ###   ########.fr       */
+/*   Updated: 2024/05/29 21:13:59 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ char	*ft_get_line(char *cluster)
 	i = 0;
 	while (cluster[i] && cluster[i] != '\n')
 		i++;
-	word = (char *)ftcalloc((i + 2), sizeof(char));
+	if (cluster[i] == '\n')
+		i++;
+	word = (char *)ftcalloc((i + 1), sizeof(char));
 	if (!word)
 		return (NULL);
 	i = 0;
@@ -47,9 +49,9 @@ char	*newcluster(char *cluster)
 	i = 0;
 	while (cluster && cluster[i] && cluster[i] != '\n')
 		i++;
-	if (!cluster[i])
+	if (cluster[i] == '\0')
 		return (free(cluster), NULL);
-	word = (char *)ftcalloc((ftstrlen(cluster) - i + 1), sizeof(char));
+	word = ftcalloc((ftstrlen(cluster) - i + 1), sizeof(char));
 	if (!word)
 		return (NULL);
 	i++;
@@ -74,13 +76,11 @@ char	*readfile(int fd, char *cluster)
 	if (!buffer)
 		return (NULL);
 	counter = 1;
-	while (counter > 0)
+	while (counter != 0)
 	{
 		counter = read(fd, buffer, BUFFER_SIZE);
-		if (counter == -1)
-			return (free(buffer), NULL);
-		if (counter == 0)
-			break ;
+		if (counter < 0)
+			return (free(buffer), free(cluster), NULL);
 		buffer[counter] = '\0';
 		if (!cluster)
 			cluster = ftstrdup("");
@@ -102,7 +102,11 @@ char	*get_next_line(int fd)
 	cluster = readfile(fd, cluster);
 	if (!cluster)
 		return (NULL);
+	if (cluster[0] == '\0')
+		return (NULL);
 	reader = ft_get_line(cluster);
+	if (!reader)
+		return (NULL);
 	cluster = newcluster(cluster);
 	return (reader);
 }
@@ -115,13 +119,16 @@ int	main(void)
 	int		fd1;
 	fd1 = open("test.txt", O_RDONLY);
 	i = 1;
-	while (i < 2)
+	printf("Buffer size > %d", BUFFER_SIZE);
+	line = get_next_line(fd1);
+	while (line != 0)
 	{
-		line = get_next_line(fd1);
-		printf("line [%02d]: %s", i, line);
+		printf("line [%02d]:%s", i, line);
 		free(line);
+		line = get_next_line(fd1);
 		i++;
 	}
+	printf("line [%02d]:%s", i, line);
 	close(fd1);
 	return (0);
 } */
