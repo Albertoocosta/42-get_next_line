@@ -6,7 +6,7 @@
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:31:38 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/26 15:21:00 by cda-fons         ###   ########.fr       */
+/*   Updated: 2024/05/29 17:43:31 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@
 char	*get_next_line(int fd);
 char	*ftstrchr(const char *str, int c);
 void	*ftcalloc(size_t nmemb, size_t size);
-char	*ftstrjoin(char const *s1, char const *s2);
+char	*ftstrjoin(char *s1, char *s2);
+char	*ftstrdup(char *s);
 char	*newcluster(char *cluster);
-char	*get_line(char *cluster);
+char	*ft_get_line(char *cluster);
 char	*readfile(int fd, char *cluster);
 size_t	ftstrlen(const char *str);
 

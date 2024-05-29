@@ -6,7 +6,7 @@
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:37:04 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/26 18:33:36 by cda-fons         ###   ########.fr       */
+/*   Updated: 2024/05/29 17:38:20 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ftstrchr(const char *str, int c)
 	while (str && str[i] != (char)c)
 	{
 		if (!str[i])
-			return (0);
+			return (NULL);
 		i++;
 	}
 	return ((char *)&str[i]);
@@ -43,7 +43,7 @@ void	*ftcalloc(size_t nmemb, size_t size)
 
 	ptr = malloc(nmemb * size);
 	if (!ptr)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (i < (nmemb * size))
 	{
@@ -53,13 +53,14 @@ void	*ftcalloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-char	*ftstrjoin(char const *s1, char const *s2)
+char	*ftstrjoin(char *s1, char *s2)
 {
 	char	*cat;
 	size_t	i;
 	size_t	h;
 
-	cat = ftcalloc(((ftstrlen((char *)s1) + ftstrlen((char *)s2)) + 1), sizeof(char));
+	cat = ftcalloc(((ftstrlen((char *)s1) + ftstrlen((char *)s2))
+				+ 1), sizeof(char));
 	if (cat == 0)
 		return (NULL);
 	i = 0;
@@ -80,28 +81,20 @@ char	*ftstrjoin(char const *s1, char const *s2)
 	return (cat);
 }
 
-char	*get_line(char *cluster)
+char	*ftstrdup(char *s)
 {
-	char	*word;
-	int		i;
+	char	*str;
+	size_t	i;
 
-	i = 0;
-	while (cluster[i] && cluster[i] != '\n')
-		i++;
-	word = (char *)ftcalloc((i + 2), sizeof(char));
-	if (!word)
+	str = (char *)malloc(sizeof(char) * (ftstrlen((char *)s) + 1));
+	if (!str)
 		return (NULL);
 	i = 0;
-	while (cluster[i] && cluster[i] != '\n')
+	while (s[i] != 0)
 	{
-		word[i] = cluster[i];
+		str[i] = s[i];
 		i++;
 	}
-	if (cluster[i] == '\n')
-	{
-		word[i] = cluster[i];
-		i++;
-	}
-	word[i] = '\0';
-	return (word);
+	str[i] = '\0';
+	return (str);
 }
