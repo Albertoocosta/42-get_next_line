@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cda-fons <cda-fons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/19 15:30:07 by cda-fons          #+#    #+#             */
-/*   Updated: 2024/05/30 17:24:52 by cda-fons         ###   ########.fr       */
+/*   Created: 2024/05/30 16:14:45 by cda-fons          #+#    #+#             */
+/*   Updated: 2024/05/30 17:02:48 by cda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_get_line(char *cluster)
 {
@@ -40,9 +40,9 @@ char	*ft_get_line(char *cluster)
 	return (word);
 }
 
-char	*modifycluster(char *cluster)
+char	*newcluster(char *cluster)
 {
-	char	*newcluster;
+	char	*word;
 	int		i;
 	int		j;
 
@@ -54,16 +54,16 @@ char	*modifycluster(char *cluster)
 		free(cluster);
 		return (NULL);
 	}
-	newcluster = ftcalloc((ftstrlen(cluster) - i + 1), sizeof(char));
-	if (!newcluster)
+	word = ftcalloc((ftstrlen(cluster) - i + 1), sizeof(char));
+	if (!word)
 		return (NULL);
 	i++;
 	j = 0;
 	while (cluster[i])
-		newcluster[j++] = cluster[i++];
-	newcluster[j] = '\0';
+		word[j++] = cluster[i++];
+	word[j] = '\0';
 	free(cluster);
-	return (newcluster);
+	return (word);
 }
 
 char	*readfile(int fd, char *cluster)
@@ -97,23 +97,23 @@ char	*readfile(int fd, char *cluster)
 
 char	*get_next_line(int fd)
 {
-	static char		*cluster;
+	static char		*cluster[4096];
 	char			*reader;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	cluster = readfile(fd, cluster);
-	if (!cluster)
+	cluster[fd] = readfile(fd, cluster[fd]);
+	if (!cluster[fd])
 		return (NULL);
-	if (cluster[0] == '\0')
+	if (cluster[fd][0] == '\0')
 	{
-		free(cluster);
+		free(cluster[fd]);
 		return (NULL);
 	}
-	reader = ft_get_line(cluster);
+	reader = ft_get_line(cluster[fd]);
 	if (!reader)
 		return (NULL);
-	cluster = modifycluster(cluster);
+	cluster[fd] = newcluster(cluster[fd]);
 	return (reader);
 }
 
@@ -123,17 +123,28 @@ int	main(void)
 	char	*line;
 	int		i;
 	int		fd1;
+	int		fd2;
+	int		fd3;
+
 	fd1 = open("test.txt", O_RDONLY);
+	fd2 = open("test2.txt", O_RDONLY);
+	fd3 = open("test3.txt", O_RDONLY);
 	i = 1;
-	printf("Buffer size > %d", BUFFER_SIZE);
-	line = get_next_line(-1);
-	while (line != 0)
+	while (i < 7)
 	{
-		printf("line [%02d]:%s", i, line);
-		free(line);
 		line = get_next_line(fd1);
+		printf("line [%02d]: %s", i, line);
+		free(line);
+		line = get_next_line(fd2);
+		printf("line [%02d]: %s", i, line);
+		free(line);
+		line = get_next_line(fd3);
+		printf("line [%02d]: %s", i, line);
+		free(line);
 		i++;
 	}
 	close(fd1);
+	close(fd2);
+	close(fd3);
 	return (0);
 } */
